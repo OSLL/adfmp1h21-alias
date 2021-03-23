@@ -2,10 +2,9 @@ package com.example.alias.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
 import com.example.alias.storage.GameState
 import kotlinx.android.synthetic.main.activity_game_preview.*
@@ -17,8 +16,12 @@ class GamePreviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_preview)
 
-        currentTeamTextView.text = "Команда: ${GameState.teamCounter}"
-        currentRoundTextView.text = "Раунд: ${GameState.roundCounter}"
+        val teams = GameState.teamRating.keys.toList()
+        val currentTeam = GameState.teamCounter % GameState.teamRating.size
+        val currentRound = (GameState.roundCounter + 1) / GameState.teamRating.size
+
+        currentTeamTextView.text = "Команда: ${teams[currentTeam]}"
+        currentRoundTextView.text = "Раунд: $currentRound"
 
         val teamRatingAdapter = ArrayAdapter(
             this,
@@ -31,9 +34,6 @@ class GamePreviewActivity : AppCompatActivity() {
         }
 
         teamRatingAdapter.notifyDataSetChanged()
-
-//        updateButton.setOnClickListener {
-//        }
 
         letsPlayButton.setOnClickListener {
             val gameActivityIntent = Intent(this, GameActivity::class.java)

@@ -1,41 +1,44 @@
 package com.example.alias.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.AssetManager
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
 import com.example.alias.storage.GameState
 import kotlinx.android.synthetic.main.activity_category.*
+import java.io.File
 
 class CategoryActivity : AppCompatActivity() {
-    // TODO: add categories
-    private val categories = mapOf(
-        "key" to listOf("value"),
-        "Школа" to listOf("value"),
-        "Программирование" to listOf("value"),
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        val categoryAdapter = ArrayAdapter(
+        val categoryAdapter = ArrayAdapter<String>(
             this,
             android.R.layout.simple_list_item_1,
-            categories.keys.toList()
+            GameState.categories.keys.toList()
         )
 
         categoryListView.apply {
             adapter = categoryAdapter
         }
 
-        categoryListView.setOnItemClickListener { parent, view, position, id ->
+        categoryListView.setOnItemClickListener { _, view, _, _ ->
             val category = (view as TextView).text
-            categories[category]?.let { GameState.categories.addAll(it) }
+
+            GameState.categories[category]?.let {
+                val words = resources.assets.open(it)
+                    .readBytes()
+                    .toString(Charsets.UTF_8)
+                    .split("\n")
+
+                GameState.categoryWords.addAll(words)
+            }
 
             val gamePreviewActivityIntent = Intent(this, GamePreviewActivity::class.java)
             startActivity(gamePreviewActivityIntent)

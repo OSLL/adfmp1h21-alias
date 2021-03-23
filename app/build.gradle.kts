@@ -43,6 +43,8 @@ android {
 }
 
 dependencies {
+    implementation("me.zhanghai.android.materialprogressbar:library:1.4.2")
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${KotlinCompilerVersion.VERSION}")

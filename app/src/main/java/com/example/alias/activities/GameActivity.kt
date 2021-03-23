@@ -1,104 +1,157 @@
 package com.example.alias.activities
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Chronometer
+import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
+import com.example.alias.storage.GameSettings
+import com.example.alias.storage.GameState
 import com.example.alias.utils.OnSwipeTouchListener
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.*
 
+@SuppressLint("SetTextI18n")
 class GameActivity : AppCompatActivity() {
-    private var counter = 10L
-    private var isPaused = false
-    private var isFinished = false
+    private val chronometer = Chronometer(GameSettings.roundTime)
+    private val answers = mutableListOf<AnswerWord>()
+
+    private var guessedWords = 0
+    private var skippedWords = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-
-        chronometerCountDown.setOnChronometerTickListener {
-            Chronometer.OnChronometerTickListener {
-                if (counter < 0) {
-                    // TODO: next intent
-                    return@OnChronometerTickListener
+        gameButton.setOnClickListener {
+            when (chronometer.state) {
+                ChronometerState.OFF -> {
+                    chronometer.start()
+                    chronometer.state = ChronometerState.RUNNING
+                    gameButton.text = "Пауза"
                 }
-
-                chronometerCountDown.base = counter
-                counter--
-
-                Toast.makeText(
-                    this@GameActivity,
-                    counter.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                ChronometerState.RUNNING -> {
+                    chronometer.pause()
+                    chronometer.state = ChronometerState.PAUSED
+                    gameButton.text = "Возобновить"
+                }
+                ChronometerState.PAUSED -> {
+                    chronometer.resume()
+                    chronometer.state = ChronometerState.RUNNING
+                    gameButton.text = "Пауза"
+                }
+                else -> {
+                }
             }
         }
-        chronometerCountDown.base = counter
-        chronometerCountDown.start()
-
-
-        pauseButton.setOnClickListener {
-            if (isPaused) {
-                isPaused = false
-                chronometerCountDown.base = counter
-                chronometerCountDown.start()
-                Toast.makeText(this@GameActivity, "start", Toast.LENGTH_SHORT).show()
-            } else {
-                isPaused = true
-                chronometerCountDown.stop()
-                Toast.makeText(this@GameActivity, "stop", Toast.LENGTH_SHORT).show()
-            }
-        }
-
 
         gameWordTextView.setOnTouchListener(object : OnSwipeTouchListener(this@GameActivity) {
+            // TODO: add words on button
             override fun onSwipeLeft() {
-                Toast.makeText(this@GameActivity, "Left", Toast.LENGTH_SHORT).show()
+                when (chronometer.state) {
+                    ChronometerState.RUNNING -> {
+                        skippedTextView.text = "$TEXT_SKIPPED_WORDS: ${++skippedWords}"
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), true))
+                    }
+                    ChronometerState.FINISHED -> nextActivity()
+                    else -> return
+                }
             }
 
             override fun onSwipeRight() {
-                Toast.makeText(this@GameActivity, "Right", Toast.LENGTH_SHORT).show()
+                when (chronometer.state) {
+                    ChronometerState.RUNNING -> {
+                        guessedTextView.text = "$TEXT_GUESSED_WORDS : ${++guessedWords}"
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), false))
+                    }
+                    ChronometerState.FINISHED -> nextActivity()
+                    else -> return
+                }
+            }
+
+            // TODO: maybe close activity
+            private fun nextActivity() {
+                val answerActivityIntent = Intent(
+                    this@GameActivity,
+                    AnswerActivity::class.java
+                )
+//                answerActivityIntent.putExtra("data", ArrayList(answers))
+                startActivity(answerActivityIntent)
             }
         })
     }
 
-//    private fun onChronometerTickHandler() {
-////        if (counter < 0) {
-////            counter = 20L
-////        }
-//
-//        chronometerCountDown.base = counter
-//        counter--
-//
-//        Toast.makeText(this@GameActivity, counter.toString(), Toast.LENGTH_SHORT).show()
-//    }
+    // TODO: подумать над `inner` (widget)
+    //  исправить на адекватную структуру для времени
+    private inner class Chronometer(initialTimerTime: Long) {
+        private val tickTime: Long = 1000L
+        private var millisRemaining: Long = initialTimerTime
 
-//    private fun timer(millisInFuture: Long): CountDownTimer {
-//        return object : CountDownTimer(millisInFuture, 1_000) {
-//            override fun onTick(millisUntilFinished: Long) {
-////                val timeRemaining = "Seconds remaining\n${millisUntilFinished / 1000}"
-//
-//                if (isPaused) {
-////                    editTextTime.setText("${millisUntilFinished / 1000}")
-//                    resumeTime = millisUntilFinished
-//                    cancel()
-//
-////                    text_view.text = "${text_view.text}\nPaused"
-//                    // To ensure start timer from paused time
-////                } else if (isCancelled) {
-////                    text_view.text = "${text_view.text}\nStopped.(Cancelled)"
-////                    cancel()
-//                } else {
-////                    text_view.text = timeRemaining
-//                }
-//            }
-//
-//            override fun onFinish() {
-////                text_view.text = "Done"
-//            }
-//        }
-//    }
+        private lateinit var timer: MyTimer
+
+        var state = ChronometerState.OFF
+
+        fun start() {
+            timer = MyTimer(millisRemaining)
+            timer.start()
+        }
+
+        fun pause() {
+            timer.cancel()
+        }
+
+        fun resume() {
+            start()
+        }
+
+        @SuppressLint("SetTextI18n")
+        inner class MyTimer(initialMillisTime: Long) : CountDownTimer(
+            initialMillisTime, tickTime
+
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                millisRemaining = millisUntilFinished
+                val secondsRemaining = millisUntilFinished / 1000
+
+                val minutesUntilFinished = secondsRemaining / 60
+                val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
+
+                val secondsStr = secondsInMinuteUntilFinished.toString().let {
+                    if (it.length == 2) it
+                    else "0$it"
+                }
+
+                chronometerView.text = "$minutesUntilFinished:$secondsStr"
+            }
+
+            override fun onFinish() {
+                state = ChronometerState.FINISHED
+                gameButton.isEnabled = false
+                chronometerView.text = TEXT_TIME_OUT
+            }
+        }
+    }
+
+    enum class ChronometerState {
+        FINISHED,
+        RUNNING,
+        PAUSED,
+        OFF,
+    }
+
+    data class AnswerWord(
+        private val word: String,
+        private val isGuessed: Boolean
+    )
+
+    private companion object {
+        private const val TEXT_GUESSED_WORDS = "Отгадано"
+        private const val TEXT_SKIPPED_WORDS = "Пропущено"
+        private const val TEXT_TIME_OUT = "Время вышло"
+    }
 }
