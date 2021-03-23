@@ -12,6 +12,10 @@
         tools:layout_editor_absoluteX="275dp"
         tools:layout_editor_absoluteY="73dp">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="86dp" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
@@ -22,7 +26,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="252dp" />
+            android:layout_height="226dp" />
 
         <Button
             android:id="@+id/startButton"

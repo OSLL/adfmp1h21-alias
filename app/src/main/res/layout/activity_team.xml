@@ -22,22 +22,22 @@
             android:layout_height="wrap_content"
             android:text="AbcTeam" />
 
-        <ListView
-            android:id="@+id/teamListView"
-            android:layout_width="match_parent"
-            android:layout_height="235dp">
-
-        </ListView>
-
         <Button
             android:id="@+id/addTeamButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_team_button" />
 
+        <ListView
+            android:id="@+id/teamListView"
+            android:layout_width="match_parent"
+            android:layout_height="270dp">
+
+        </ListView>
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="216dp" />
+            android:layout_height="163dp" />
 
         <Button
             android:id="@+id/letsPlayButton"
