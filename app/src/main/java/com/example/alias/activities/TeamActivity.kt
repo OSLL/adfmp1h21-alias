@@ -2,9 +2,7 @@ package com.example.alias.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.ListAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
 import com.example.alias.storage.GameState

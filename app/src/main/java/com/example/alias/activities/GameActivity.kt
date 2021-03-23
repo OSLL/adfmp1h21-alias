@@ -4,16 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
 import com.example.alias.storage.GameSettings
 import com.example.alias.storage.GameState
+import com.example.alias.utils.AnswerWord
 import com.example.alias.utils.OnSwipeTouchListener
-import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_game.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.util.*
 
 @SuppressLint("SetTextI18n")
@@ -23,6 +20,7 @@ class GameActivity : AppCompatActivity() {
 
     private var guessedWords = 0
     private var skippedWords = 0
+    private var wordsIterator = GameState.categoryWords.shuffled().iterator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,32 +31,39 @@ class GameActivity : AppCompatActivity() {
                 ChronometerState.OFF -> {
                     chronometer.start()
                     chronometer.state = ChronometerState.RUNNING
-                    gameButton.text = "Пауза"
+                    gameButton.text = TEXT_PAUSE
+                    generateNextWord()
                 }
                 ChronometerState.RUNNING -> {
                     chronometer.pause()
                     chronometer.state = ChronometerState.PAUSED
-                    gameButton.text = "Возобновить"
+                    gameButton.text = TEXT_RESUME
+                    gameWordTextView.text = TEXT_PAUSE
                 }
                 ChronometerState.PAUSED -> {
                     chronometer.resume()
                     chronometer.state = ChronometerState.RUNNING
-                    gameButton.text = "Пауза"
+                    gameButton.text = TEXT_PAUSE
+                    generateNextWord()
                 }
-                else -> {
+                ChronometerState.FINISHED -> {
                 }
             }
         }
 
         gameWordTextView.setOnTouchListener(object : OnSwipeTouchListener(this@GameActivity) {
-            // TODO: add words on button
             override fun onSwipeLeft() {
                 when (chronometer.state) {
                     ChronometerState.RUNNING -> {
                         skippedTextView.text = "$TEXT_SKIPPED_WORDS: ${++skippedWords}"
-                        answers.add(AnswerWord(gameWordTextView.text.toString(), true))
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), false))
+                        generateNextWord()
                     }
-                    ChronometerState.FINISHED -> nextActivity()
+                    ChronometerState.FINISHED -> {
+                        skippedTextView.text = "$TEXT_SKIPPED_WORDS: ${++skippedWords}"
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), false))
+                        nextActivity()
+                    }
                     else -> return
                 }
             }
@@ -67,27 +72,37 @@ class GameActivity : AppCompatActivity() {
                 when (chronometer.state) {
                     ChronometerState.RUNNING -> {
                         guessedTextView.text = "$TEXT_GUESSED_WORDS : ${++guessedWords}"
-                        answers.add(AnswerWord(gameWordTextView.text.toString(), false))
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), true))
+                        generateNextWord()
                     }
-                    ChronometerState.FINISHED -> nextActivity()
+                    ChronometerState.FINISHED -> {
+                        guessedTextView.text = "$TEXT_GUESSED_WORDS : ${++guessedWords}"
+                        answers.add(AnswerWord(gameWordTextView.text.toString(), true))
+                        nextActivity()
+                    }
                     else -> return
                 }
             }
 
-            // TODO: maybe close activity
             private fun nextActivity() {
                 val answerActivityIntent = Intent(
                     this@GameActivity,
                     AnswerActivity::class.java
                 )
-//                answerActivityIntent.putExtra("data", ArrayList(answers))
+                answerActivityIntent.putExtra("data", ArrayList(answers))
                 startActivity(answerActivityIntent)
             }
         })
     }
 
-    // TODO: подумать над `inner` (widget)
-    //  исправить на адекватную структуру для времени
+    private fun generateNextWord() {
+        if (wordsIterator.hasNext()) {
+            gameWordTextView.text = wordsIterator.next().capitalize(Locale.ROOT)
+        } else {
+            wordsIterator = GameState.categoryWords.iterator()
+        }
+    }
+
     private inner class Chronometer(initialTimerTime: Long) {
         private val tickTime: Long = 1000L
         private var millisRemaining: Long = initialTimerTime
@@ -111,8 +126,8 @@ class GameActivity : AppCompatActivity() {
 
         @SuppressLint("SetTextI18n")
         inner class MyTimer(initialMillisTime: Long) : CountDownTimer(
-            initialMillisTime, tickTime
-
+            initialMillisTime,
+            tickTime
         ) {
             override fun onTick(millisUntilFinished: Long) {
                 millisRemaining = millisUntilFinished
@@ -144,14 +159,11 @@ class GameActivity : AppCompatActivity() {
         OFF,
     }
 
-    data class AnswerWord(
-        private val word: String,
-        private val isGuessed: Boolean
-    )
-
     private companion object {
         private const val TEXT_GUESSED_WORDS = "Отгадано"
         private const val TEXT_SKIPPED_WORDS = "Пропущено"
         private const val TEXT_TIME_OUT = "Время вышло"
+        private const val TEXT_RESUME = "Возобновить"
+        private const val TEXT_PAUSE = "Пауза"
     }
 }

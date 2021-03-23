@@ -6,10 +6,10 @@ import androidx.preference.PreferenceFragmentCompat
 import com.example.alias.R
 
 class SettingsActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()

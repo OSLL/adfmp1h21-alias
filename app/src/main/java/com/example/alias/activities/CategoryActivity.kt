@@ -1,14 +1,12 @@
 package com.example.alias.activities
 
 import android.content.Intent
-import android.content.res.AssetManager
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
+import com.example.alias.storage.GameSettings
 import com.example.alias.storage.GameState
 import kotlinx.android.synthetic.main.activity_category.*
 import java.io.File
@@ -32,7 +30,8 @@ class CategoryActivity : AppCompatActivity() {
             val category = (view as TextView).text
 
             GameState.categories[category]?.let {
-                val words = resources.assets.open(it)
+                val categoryPath = File(GameSettings.categoryResources).resolve(it)
+                val words = resources.assets.open(categoryPath.toString())
                     .readBytes()
                     .toString(Charsets.UTF_8)
                     .split("\n")

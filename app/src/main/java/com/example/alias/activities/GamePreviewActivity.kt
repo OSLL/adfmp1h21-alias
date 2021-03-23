@@ -18,7 +18,7 @@ class GamePreviewActivity : AppCompatActivity() {
 
         val teams = GameState.teamRating.keys.toList()
         val currentTeam = GameState.teamCounter % GameState.teamRating.size
-        val currentRound = (GameState.roundCounter + 1) / GameState.teamRating.size
+        val currentRound = (GameState.roundCounter) / GameState.teamRating.size + 1
 
         currentTeamTextView.text = "Команда: ${teams[currentTeam]}"
         currentRoundTextView.text = "Раунд: $currentRound"
