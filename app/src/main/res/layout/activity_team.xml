@@ -6,44 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".activities.TeamActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <EditText
+        android:id="@+id/teamTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Team1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/teamTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AbcTeam" />
+    <Button
+        android:id="@+id/addTeamButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_team_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teamTextView" />
 
-        <Button
-            android:id="@+id/addTeamButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_team_button" />
+    <ListView
+        android:id="@+id/teamListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/letsPlayButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTeamButton"
+        tools:listitem="@android:layout/simple_list_item_1">
 
-        <ListView
-            android:id="@+id/teamListView"
-            android:layout_width="match_parent"
-            android:layout_height="270dp">
+    </ListView>
 
-        </ListView>
+    <Button
+        android:id="@+id/letsPlayButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/next_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="163dp" />
-
-        <Button
-            android:id="@+id/letsPlayButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/next_button" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

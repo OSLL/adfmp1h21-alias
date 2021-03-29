@@ -1,59 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.GamePreviewActivity">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/teamRatingTextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:text="@string/team_rating"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/teamRatingTextView"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:text="@string/team_rating"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+    <ListView
+        android:id="@+id/teamRatingListView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teamRatingTextView"
+        tools:listitem="@android:layout/simple_list_item_1">
 
-        <ListView
-            android:id="@+id/teamRatingListView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
+    </ListView>
 
-        </ListView>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/letsPlayButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teamRatingListView"
+        app:layout_constraintVertical_bias="0.25">
 
         <TextView
             android:id="@+id/currentRoundTextView"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/currentTeamTextView"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentRoundTextView" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="68dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/letsPlayButton"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:text="@string/start_game" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/letsPlayButton"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:text="@string/start_game"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

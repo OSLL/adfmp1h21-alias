@@ -1,5 +1,6 @@
 package com.example.alias.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -9,9 +10,12 @@ import com.example.alias.storage.GameState
 import kotlinx.android.synthetic.main.activity_team.*
 
 class TeamActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_team)
+
+        var teamCounter = 2
 
         val teams = GameState.teamRating.keys.toMutableList()
         val teamAdapter = ArrayAdapter(
@@ -29,6 +33,8 @@ class TeamActivity : AppCompatActivity() {
             if (!GameState.teamRating.containsKey(newTeam)) {
                 GameState.teamRating[newTeam] = 0
                 teams.add(newTeam)
+
+                teamTextView.setText("Team${teamCounter++}")
             }
 
             teamAdapter.notifyDataSetChanged()
