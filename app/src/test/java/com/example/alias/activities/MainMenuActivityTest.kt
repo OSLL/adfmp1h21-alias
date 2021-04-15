@@ -1,13 +1,5 @@
 package com.example.alias.activities
 
-import org.junit.Assert.*
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-
 //@RunWith(AndroidJUnit4::class)
 //@LargeTest
 //class MainMenuActivityTest {

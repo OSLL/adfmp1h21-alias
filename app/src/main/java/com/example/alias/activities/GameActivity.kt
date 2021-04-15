@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.example.alias.R
-import com.example.alias.storage.GameSettings
 import com.example.alias.storage.GameState
 import com.example.alias.utils.AnswerWord
 import com.example.alias.utils.OnSwipeTouchListener
