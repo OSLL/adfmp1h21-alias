@@ -1,24 +1,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Header">
-
-        <EditTextPreference
-            android:defaultValue="false"
-            android:key="edit_text_preference_1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="tested" />
-        <EditTextPreference
-            app:key="signature"
-            app:title="title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory app:title="@string/game_settings">
 
+        <SeekBarPreference
+            android:defaultValue="20"
+            android:key="wordCount"
+            android:max="100"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:summary="Требуемое количество слов для победы"
+            app:title="Количество слов" />
+
+        <SeekBarPreference
+            android:defaultValue="20"
+            android:key="roundTime"
+            android:max="90"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:summary="Время указано в секундах"
+            app:title="Длительность раунда" />
+
         <SwitchPreferenceCompat
+            android:key="wrongPenalty"
+            app:defaultValue="false"
             app:key="sync"
             app:title="@string/game_penalty" />
 
