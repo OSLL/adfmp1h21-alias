@@ -16,7 +16,7 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        val categoryAdapter = ArrayAdapter<String>(
+        val categoryAdapter: ArrayAdapter<String> = ArrayAdapter(
             this,
             android.R.layout.simple_list_item_1,
             GameState.categories.keys.toList()

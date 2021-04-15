@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.alias.R
 import com.example.alias.storage.GameState
@@ -30,6 +31,11 @@ class TeamActivity : AppCompatActivity() {
 
         addTeamButton.setOnClickListener {
             val newTeam = teamTextView.text.toString()
+
+            if (newTeam.isEmpty()) {
+                return@setOnClickListener
+            }
+
             if (!GameState.teamRating.containsKey(newTeam)) {
                 GameState.teamRating[newTeam] = 0
                 teams.add(newTeam)
@@ -41,6 +47,11 @@ class TeamActivity : AppCompatActivity() {
         }
 
         letsPlayButton.setOnClickListener {
+            if (teams.isEmpty()) {
+                Toast.makeText(this, "Необходимо добавить команду", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val categoryActivityIntent = Intent(this, CategoryActivity::class.java)
             startActivity(categoryActivityIntent)
         }

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.example.alias.R
 import com.example.alias.storage.GameSettings
 import com.example.alias.storage.GameState
@@ -12,10 +14,10 @@ import com.example.alias.utils.AnswerWord
 import com.example.alias.utils.OnSwipeTouchListener
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @SuppressLint("SetTextI18n")
 class GameActivity : AppCompatActivity() {
-    private val chronometer = Chronometer(GameSettings.roundTime)
     private val answers = mutableListOf<AnswerWord>()
 
     private var guessedWords = 0
@@ -25,6 +27,14 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val chronometer = Chronometer(
+            TimeUnit.MILLISECONDS.convert(
+                preferences.getInt("roundTime", 1).toLong(),
+                TimeUnit.SECONDS
+            )
+        )
 
         gameButton.setOnClickListener {
             when (chronometer.state) {
@@ -59,11 +69,6 @@ class GameActivity : AppCompatActivity() {
                         answers.add(AnswerWord(gameWordTextView.text.toString(), false))
                         generateNextWord()
                     }
-                    ChronometerState.FINISHED -> {
-                        skippedTextView.text = "$TEXT_SKIPPED_WORDS: ${++skippedWords}"
-                        answers.add(AnswerWord(gameWordTextView.text.toString(), false))
-                        nextActivity()
-                    }
                     else -> return
                 }
             }
@@ -75,22 +80,8 @@ class GameActivity : AppCompatActivity() {
                         answers.add(AnswerWord(gameWordTextView.text.toString(), true))
                         generateNextWord()
                     }
-                    ChronometerState.FINISHED -> {
-                        guessedTextView.text = "$TEXT_GUESSED_WORDS : ${++guessedWords}"
-                        answers.add(AnswerWord(gameWordTextView.text.toString(), true))
-                        nextActivity()
-                    }
                     else -> return
                 }
-            }
-
-            private fun nextActivity() {
-                val answerActivityIntent = Intent(
-                    this@GameActivity,
-                    AnswerActivity::class.java
-                )
-                answerActivityIntent.putExtra("data", ArrayList(answers))
-                startActivity(answerActivityIntent)
             }
         })
     }
@@ -148,6 +139,13 @@ class GameActivity : AppCompatActivity() {
                 state = ChronometerState.FINISHED
                 gameButton.isEnabled = false
                 chronometerView.text = TEXT_TIME_OUT
+
+                val answerActivityIntent = Intent(
+                    this@GameActivity,
+                    AnswerActivity::class.java
+                )
+                answerActivityIntent.putExtra("data", ArrayList(answers))
+                startActivity(answerActivityIntent)
             }
         }
     }

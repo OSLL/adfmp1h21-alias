@@ -1,7 +1,4 @@
-//val kotlinVersion: String = "1.4.30"
-
 buildscript {
-//    ext.kotlin_version = "1.4.30"
     repositories {
         google()
         jcenter()
@@ -13,7 +10,6 @@ buildscript {
         classpath(kotlin("gradle-plugin", version = "1.4.30"))
         classpath(kotlin("gradle-plugin", version = "1.4.30"))
         classpath(kotlin("serialization", version = "1.4.30"))
-//        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
     }
 }
 
