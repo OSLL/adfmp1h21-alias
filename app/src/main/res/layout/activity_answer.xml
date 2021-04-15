@@ -6,25 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".activities.AnswerActivity">
 
-    <Button
-        android:id="@+id/nextButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/answerRecyclerListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/next_button"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:id="@+id/answerListView"
+    <LinearLayout
+        android:id="@+id/answerButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:clipToPadding="true"
+        android:orientation="vertical"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nextButton"
-        tools:listitem="@android:layout/simple_list_item_1">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-    </ListView>
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/next_button" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
