@@ -32,16 +32,11 @@ class TeamActivity : AppCompatActivity() {
         addTeamButton.setOnClickListener {
             val newTeam = teamTextView.text.toString()
 
-            if (newTeam.isEmpty()) {
-                return@setOnClickListener
-            }
+            if (!validation(newTeam)) return@setOnClickListener
 
-            if (!GameState.teamRating.containsKey(newTeam)) {
-                GameState.teamRating[newTeam] = 0
-                teams.add(newTeam)
-
-                teamTextView.setText("Team${teamCounter++}")
-            }
+            GameState.teamRating[newTeam] = 0
+            teams.add(newTeam)
+            teamTextView.setText("Team${teamCounter++}")
 
             teamAdapter.notifyDataSetChanged()
         }
@@ -55,5 +50,17 @@ class TeamActivity : AppCompatActivity() {
             val categoryActivityIntent = Intent(this, CategoryActivity::class.java)
             startActivity(categoryActivityIntent)
         }
+    }
+
+    fun validation(teamName: String): Boolean {
+        if (teamName.isEmpty()) {
+            return false
+        }
+
+        if (GameState.teamRating.containsKey(teamName)) {
+            return false
+        }
+
+        return true
     }
 }

@@ -14,5 +14,7 @@ class GameState {
 
         var teamCounter = 0
         var roundCounter = 0
+
+        var winner = ""
     }
 }

@@ -22,9 +22,8 @@
             app:title="Длительность раунда" />
 
         <SwitchPreferenceCompat
+            android:defaultValue="false"
             android:key="wrongPenalty"
-            app:defaultValue="false"
-            app:key="sync"
             app:title="@string/game_penalty" />
 
     </PreferenceCategory>

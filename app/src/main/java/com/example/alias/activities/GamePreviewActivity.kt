@@ -39,5 +39,12 @@ class GamePreviewActivity : AppCompatActivity() {
             val gameActivityIntent = Intent(this, GameActivity::class.java)
             startActivity(gameActivityIntent)
         }
+
+        previewMainMenuButton.setOnClickListener {
+            GameState.teamRating.clear()
+
+            val intent = Intent(this, MainMenuActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

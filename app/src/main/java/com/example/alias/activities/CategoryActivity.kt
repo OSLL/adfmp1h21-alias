@@ -27,20 +27,26 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         categoryListView.setOnItemClickListener { _, view, _, _ ->
-            val category = (view as TextView).text
-
-            GameState.categories[category]?.let {
-                val categoryPath = File(GameSettings.categoryResources).resolve(it)
-                val words = resources.assets.open(categoryPath.toString())
-                    .readBytes()
-                    .toString(Charsets.UTF_8)
-                    .split("\n")
-
-                GameState.categoryWords.addAll(words)
-            }
+            val category = (view as TextView).text.toString()
+            choiceCategory(category)
 
             val gamePreviewActivityIntent = Intent(this, GamePreviewActivity::class.java)
             startActivity(gamePreviewActivityIntent)
         }
+    }
+
+    fun choiceCategory(categoryName: String) {
+        GameState.categories[categoryName]?.let {
+            val words = readAssetResource(it)
+            GameState.categoryWords.addAll(words)
+        }
+    }
+
+    fun readAssetResource(categoryPath: String): List<String> {
+        val categoryFile = File(GameSettings.categoryResources).resolve(categoryPath)
+        return resources.assets.open(categoryFile.toString())
+            .readBytes()
+            .toString(Charsets.UTF_8)
+            .split("\n")
     }
 }

@@ -2,17 +2,22 @@ package com.example.alias.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alias.R
 import com.example.alias.storage.GameState
 import com.example.alias.utils.AnswerWord
 import com.example.alias.utils.SwitchRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_answer.*
+import kotlin.properties.Delegates
 
 class AnswerActivity : AppCompatActivity(), SwitchRecyclerViewAdapter.OnItemClickListener {
     private lateinit var answerWords: List<AnswerWord>
     private lateinit var switchRecyclerViewAdapter: SwitchRecyclerViewAdapter
+
+    private var wordsCountToWin by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,10 @@ class AnswerActivity : AppCompatActivity(), SwitchRecyclerViewAdapter.OnItemClic
             this
         )
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val penalty = preferences.getBoolean("wrongPenalty", false)
+        wordsCountToWin = preferences.getInt("wordCount", 1)
+
         answerRecyclerListView.apply {
             adapter = switchRecyclerViewAdapter
             layoutManager = LinearLayoutManager(this@AnswerActivity)
@@ -31,19 +40,23 @@ class AnswerActivity : AppCompatActivity(), SwitchRecyclerViewAdapter.OnItemClic
         }
 
         nextButton.setOnClickListener {
+            calculateResult(answerWords, penalty)
+
             val teams = GameState.teamRating.keys.toList()
             val currentTeam = GameState.teamCounter % GameState.teamRating.size
             val team = teams[currentTeam]
-            val points = answerWords.map { it.isGuessed }.filter { it }.count()
 
-            GameState.teamRating[team] = GameState.teamRating.getOrDefault(team, 0) + points
+            if (GameState.teamRating[team]!! >= wordsCountToWin) {
+                GameState.winner = team
+                val recordActivity = Intent(this, RecordActivity::class.java)
+                startActivity(recordActivity)
+                return@setOnClickListener
+            }
+
             GameState.teamCounter++
             GameState.roundCounter++
 
-            val gamePreviewActivityIntent = Intent(
-                this,
-                GamePreviewActivity::class.java
-            )
+            val gamePreviewActivityIntent = Intent(this, GamePreviewActivity::class.java)
             startActivity(gamePreviewActivityIntent)
         }
     }
@@ -53,5 +66,23 @@ class AnswerActivity : AppCompatActivity(), SwitchRecyclerViewAdapter.OnItemClic
         clickedItem.isGuessed = !clickedItem.isGuessed
 
         switchRecyclerViewAdapter.notifyItemChanged(position)
+    }
+
+    fun calculateResult(answerWords: List<AnswerWord>, withPenalty: Boolean) {
+        val teams = GameState.teamRating.keys.toList()
+        val currentTeam = GameState.teamCounter % GameState.teamRating.size
+        val team = teams[currentTeam]
+        val answerStatus = answerWords.map { it.isGuessed }
+        var points = answerStatus
+            .filter { it }
+            .count()
+
+        if (withPenalty) {
+            points -= answerStatus
+                .filterNot { it }
+                .count()
+        }
+
+        GameState.teamRating[team] = GameState.teamRating.getOrDefault(team, 0) + points
     }
 }

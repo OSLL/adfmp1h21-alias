@@ -35,6 +35,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -56,7 +60,10 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation ("androidx.test:core:1.3.0")
-    testImplementation ("org.mockito:mockito-core:3.6.28" )
+//    testImplementation ("org.mockito:mockito-core:3.6.28" )
+
+    testImplementation( "org.mockito:mockito-core:3.6.28")
+    testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")

@@ -19,4 +19,6 @@
 
     <string name="select_category">Выберите категорию</string>
     <string name="team_rating">Рейтинг команд</string>
+    <string name="winner_team_text">Победила команда</string>
+    <string name="main_menu_button">Главное меню</string>
 </resources>

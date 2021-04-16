@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:padding="8dp">
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/answerSwitch"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -22,7 +22,6 @@
             android:layout_margin="8dp"
             android:layout_toEndOf="@id/answerSwitch"
             android:layout_toRightOf="@id/answerSwitch"
-            android:text="Text 1"
             android:textSize="24sp"
             android:textStyle="bold" />
     </RelativeLayout>

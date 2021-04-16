@@ -1,11 +1,10 @@
 package com.example.alias.utils
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.alias.R
 import kotlinx.android.synthetic.main.switch_item.view.*
@@ -31,12 +30,10 @@ class SwitchRecyclerViewAdapter(
 
     override fun getItemCount(): Int = data.size
 
-    // TODO: UseSwitchCompatOrMaterialCode
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
     inner class SwitchViewHolder(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val switch: Switch = itemView.answerSwitch
+        val switch: SwitchCompat = itemView.answerSwitch
         val textView: TextView = itemView.answerText
 
         init {

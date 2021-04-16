@@ -44,7 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:ems="10"
+            android:gravity="center|center_horizontal|center_vertical"
             android:inputType="textPersonName"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +57,9 @@
             android:layout_height="45dp"
             android:layout_marginTop="8dp"
             android:ems="10"
+            android:gravity="center|center_horizontal|center_vertical"
             android:inputType="textPersonName"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentRoundTextView" />
@@ -66,9 +70,23 @@
         android:id="@+id/letsPlayButton"
         android:layout_width="match_parent"
         android:layout_height="58dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/start_game"
+        app:layout_constraintBottom_toTopOf="@+id/previewMainMenuButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/previewMainMenuButton"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:text="@string/main_menu_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
